@@ -1,17 +1,20 @@
 ARG device
 ARG username="jovyan"
 
-FROM ubuntu:24.04 AS base-cpu
+FROM ubuntu:22.04 AS base-cpu
 
-FROM nvidia/cuda:12.9.1-base-ubuntu24.04 AS base-gpu
+FROM nvidia/cuda:11.8.0-base-ubuntu22.04 AS base-gpu
 
 FROM base-$device AS base
 
 ARG username
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -qq update && \
-    apt-get install -y wget unzip git cmake xvfb sudo freeglut3-dev ffmpeg
+RUN apt-get -qq update
+RUN apt-get install -y build-essential wget unzip git \
+    cmake xvfb sudo freeglut3-dev ffmpeg openssl libsdl2-dev \
+    libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libfreetype6-dev \
+    libportmidi-dev libjpeg-dev python3-pygame swig
 
 RUN adduser --disabled-password --gecos "Default user" $username && \
     adduser $username sudo && \
@@ -50,9 +53,9 @@ ARG username
 USER $username
 SHELL ["/bin/bash", "-i", "-c"]
 
-RUN conda env create -f /tmp/deeplearning.yaml && \
-    conda activate deeplearning && \
-    python -m ipykernel install --user --name python3 --display-name "Python 3"
+RUN conda env create -f /tmp/deeplearning.yaml
+RUN conda activate deeplearning
+RUN python -m ipykernel install --user --name python3 --display-name "Python 3"
 
 RUN sudo rm /tmp/deeplearning*.yaml
 
