@@ -1,32 +1,36 @@
 name: deeplearning
 channels:
   - defaults
+  - rapidsai
+  - nvidia
+  - conda-forge
 dependencies:
+  - cuml=25.06.00
   - graphviz
   - python-graphviz
   - ipykernel
   - keras
-  - numpy=1.16.6
+  - numpy
   - pip
   - scipy
-  - {tensorflow}=1.13.1
+  - tensorflow
   - tqdm
   - pyopengl-accelerate
-  - {pytorch}
+  - pytorch
   - torchvision
   - opencv
   - pip:
     - atari-py
-    - sklearn
+    - scikit-learn
     - matplotlib
     - seaborn
     - scikit-image
     - imageio
     - pyglet
     - psutil
-    - gym
-    - gym[box2d]
-    - gym[atari]
+    - gymnasium
+    - gymnasium[box2d]
+    - gymnasium[atari]
     - requests
     - editdistance
 prefix: /opt/conda/envs/deeplearning

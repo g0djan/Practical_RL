@@ -1,2 +1,10 @@
 #!/usr/bin/env bash
-jupyter notebook --no-browser --ip 0.0.0.0
+
+jupyter notebook password
+
+jupyter notebook \
+  --ip=0.0.0.0 \
+  --port=8888 \
+  --no-browser \
+  --certfile=/certs/mycert.pem \
+  --keyfile=/certs/mykey.key
