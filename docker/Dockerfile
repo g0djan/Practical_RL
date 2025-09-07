@@ -14,7 +14,7 @@ RUN apt-get -qq update
 RUN apt-get install -y build-essential wget unzip git \
     cmake xvfb sudo freeglut3-dev ffmpeg openssl libsdl2-dev \
     libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libfreetype6-dev \
-    libportmidi-dev libjpeg-dev python3-pygame swig
+    libportmidi-dev libjpeg-dev python3-pygame swig graphviz
 
 RUN adduser --disabled-password --gecos "Default user" $username && \
     adduser $username sudo && \
@@ -63,6 +63,7 @@ EXPOSE 8888
 VOLUME /notebooks
 WORKDIR /notebooks
 ENV PATH /opt/conda/bin:$PATH
+
 
 COPY run_jupyter.sh /
 CMD ["/run_jupyter.sh"]
