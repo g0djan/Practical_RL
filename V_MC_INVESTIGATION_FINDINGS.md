@@ -1,5 +1,21 @@
 # Investigation: Where `v_mc` Was Introduced
 
+## Quick Answer
+
+**Q: Where was `v_mc` introduced?**
+
+**A:** The `v_mc` variable was introduced in commit **`6583257a47f6195c2fc926797d55c6f47f90733a`** on **Feb 8, 2019** in file **`_under_construction/week4_approx_rl/utils.py`** (later moved to `week04_approx_rl/utils.py`).
+
+**Q: Why is it missing now?**
+
+**A:** In commit **`71a5612a4151aa645a7a28732f84b755ae886995`** on **Mar 13, 2024**, the entire `utils.py` file was deleted during a major restructure. The function was replaced with a simplified version in `week04_approx_rl/dqn/analysis.py` that doesn't compute `v_mc` or `v_agent`.
+
+**Q: How do I view the original code?**
+
+**A:** See the Appendix at the bottom of this file, or run: `git show 71a5612~1:week04_approx_rl/utils.py`
+
+---
+
 ## Summary
 
 The `v_mc` variable was introduced in the original `utils.py` file that is **no longer present in the current repository**. The current code in `week04_approx_rl/dqn/analysis.py` does not compute or return `v_mc` and `v_agent`, which is why the notebooks reference these fields but they are not available.
