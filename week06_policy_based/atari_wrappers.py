@@ -7,7 +7,6 @@ import numpy as np
 from gymnasium import ObservationWrapper, RewardWrapper, Wrapper
 from gymnasium.spaces import Box
 from gymnasium.wrappers import RecordVideo
-from shimmy.atari_env import AtariEnv
 from tensorboardX import SummaryWriter
 
 from env_batch import ParallelEnvBatch
@@ -142,7 +141,7 @@ class MaxBetweenFrames(ObservationWrapper):
     """Takes maximum between two subsequent frames."""
 
     def __init__(self, env):
-        if isinstance(env.unwrapped, AtariEnv) and "NoFrameskip" not in env.spec.id:
+        if "NoFrameskip" not in env.spec.id:
             raise ValueError("MaxBetweenFrames requires NoFrameskip in atari env id")
         super().__init__(env)
         self.last_obs = None
@@ -193,7 +192,7 @@ class SkipFrames(Wrapper):
 
     def __init__(self, env, nskip=4):
         super().__init__(env)
-        if isinstance(env.unwrapped, AtariEnv) and "NoFrameskip" not in env.spec.id:
+        if "NoFrameskip" not in env.spec.id:
             raise ValueError("SkipFrames requires NoFrameskip in atari env id")
         self.nskip = nskip
 
