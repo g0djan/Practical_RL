@@ -4,6 +4,7 @@ from multiprocessing import Pipe, Process
 import numpy as np
 from gymnasium import Env, Wrapper
 from gymnasium.spaces import Space
+import pdb
 
 
 class SpaceBatch(Space):
@@ -208,6 +209,8 @@ class ParallelEnvBatch(EnvBatch):
         return self._nenvs
 
     def step(self, actions):
+
+
         self._check_actions(actions)
         for conn, a in zip(self._parent_connections, actions):
             conn.send(("step", a))

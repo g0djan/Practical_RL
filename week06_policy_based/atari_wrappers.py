@@ -415,3 +415,60 @@ def nature_dqn_env(env_id, nenvs=None, seed=None, summaries="Numpy", clip_reward
     if clip_reward:
         env = ClipReward(env)
     return env
+
+
+# magic for parallel launching of environments
+class _thunk_cart_pole:
+    def __init__(self, i, env_id, **kwargs):
+        self.env_id = env_id
+        self.i = i
+        self.kwargs = kwargs
+
+    def __call__(self):
+        return cart_pole_env(
+            self.env_id,
+            summaries=False,
+            clip_reward=False,
+            **self.kwargs,
+        )
+
+def cart_pole_env(env_id, nenvs=None, seed=None, summaries="Numpy", clip_reward=True):
+    """Wraps env as in Nature DQN paper."""
+    # if "NoFrameskip" not in env_id:
+    #     raise ValueError(f"env_id must have 'NoFrameskip' but is {env_id}")
+    if nenvs is not None:
+        if seed is None:
+            seed = list(range(nenvs))
+        if isinstance(seed, int):
+            seed = [seed] * nenvs
+        if len(seed) != nenvs:
+            raise ValueError(
+                f"seed has length {len(seed)} but must have "
+                f"length equal to nenvs which is {nenvs}"
+            )
+
+        thunks = [_thunk_cart_pole(i, env_id) for i in range(nenvs)]
+        env = ParallelEnvBatch(make_env=thunks, seeds=seed)
+
+        if summaries:
+            summaries_class = get_summaries_class(summaries)
+            env = summaries_class(env, prefix=env_id)
+        if clip_reward:
+            env = ClipReward(env)
+        return env
+
+    env = gym.make(env_id, render_mode="rgb_array")
+    if summaries:
+        env = TensorboardSummaries(env)
+    # env = EpisodicLife(env)
+    # if "FIRE" in env.unwrapped.get_action_meanings():
+    #     env = FireReset(env)
+    env = StartWithRandomActions(env, max_random_actions=30)
+    # env = MaxBetweenFrames(env)
+    # env = SkipFrames(env, 4)
+    # env = ImagePreprocessing(env, width=84, height=84, grayscale=True)
+    # env = QueueFrames(env, 4)
+    # env = SwapImageAxes(env)
+    if clip_reward:
+        env = ClipReward(env)
+    return env
